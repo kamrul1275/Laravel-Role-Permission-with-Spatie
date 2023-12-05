@@ -47,7 +47,7 @@
             </div>
             <div class="flex rounded-lg mb-4 justify-between items-center py-2 px-6 text-lg font-semibold text-left text-gray-900 bg-white dark:text-white dark:bg-gray-800">
                 <h2 class="">All User
-                    <span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5">{{ $users->total() }}</span>
+                    <span class="bg-blue-500 text-white rounded px-1 text-xs py-0.5"></span>
                 </h2>
                 <a href="{{ route('users.create') }}">
                     <button type="button"
@@ -84,16 +84,20 @@
                                     <img class="w-10 h-10 rounded-full" src="{{ $user->image_url }}"
                                         alt="Jese image">
                                     <div class="pl-3">
-                                        <div class="text-base font-semibold">{{ $user->name }}</div>
+                                        <div class="text-base font-semibold">{{ $user->name}}...</div>
                                         <div class="font-normal text-gray-500">{{ $user->email }}</div>
                                     </div>
                                 </th>
+                             @foreach ($user->roles as $data) 
                                 <td class="py-4 px-6">
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800"> Default </span>
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800"> {{ $data->name ?? ' '}} </span>
                                 </td>
+                              @endforeach
+                             
                                 <td class="py-4 px-6">
-                                    {{-- {{ $user->created_at->diffForHumans() }} --}}
+                              ..
                                 </td>
+
                                 <td class="py-4 px-6">
                                     <div class="flex items-center">
                                         @if($user->status)
@@ -129,7 +133,7 @@
                 </tbody>
             </table>
             <div class="p-5">
-                {{ $users->links() }}
+              
             </div>
         </div>
     </div>

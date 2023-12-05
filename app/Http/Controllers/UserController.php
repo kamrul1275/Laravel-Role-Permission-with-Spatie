@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -14,13 +15,22 @@ class UserController extends Controller
      */
     public function index()
     {
+
+    //     $roles = Role::get();
+    //   return  $roles;
+
         $data = User::latest()->get();
+
+//return  $data;
+
         $inactiveUsers = $data->where('status', false)->count();
         $admin = $data->where('is_admin', true)->count();
         $customers = $data->where('is_admin', false)->count();
 
         $userData = ['customers' => $customers, 'admin' => $admin, 'inactive' => $inactiveUsers];
-        $users = User::latest()->paginate(20);
+        $users = User::with('roles')->latest()->get();
+
+       // return $users;
 
         return view('user.index', compact(['users', 'userData']));
     }
@@ -32,7 +42,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+
+
+        $roles = Role::with('permissions')->latest()->get();
+
+        //return $roles;
+        return view('user.create',compact('roles'));
     }
 
     /**
@@ -46,15 +61,30 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:80',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|confirmed',
+            'roles' => 'array',
         ]);
 
-        User::create([
+        $users =User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'status' => $request->status,
         ]);
+
+        $post_permissions = $request->input('roles');
+       //dd($post_permissions );
+        if ($post_permissions !== null) {
+            $permissions = [];
+            foreach ($post_permissions as $key => $val) {
+                $permissions[intval($val)] = intval($val);
+            }
+    
+            $users->syncRoles($permissions);
+
+            //dd($users);
+        }
+    
 
         session()->flash('success', 'User created successfully');
         return back();

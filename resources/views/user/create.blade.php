@@ -51,6 +51,31 @@
                                     </div>
                                 @enderror
                             </div>
+
+                            <div class="mb-6">
+                               
+
+                                <select name="roles[]" id="">
+
+
+                                    @foreach ($roles as $role)
+
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        
+                                    @endforeach
+
+
+                                 
+
+                                </select>
+                          
+                            </div>
+
+
+                            
+
+
+
                             <div class="mb-6">
                                 <label for="confirmPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"> Status </label>
                                 <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
